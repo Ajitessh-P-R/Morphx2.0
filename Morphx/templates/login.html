@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Login | Amrita Social{% endblock %}
+{% block content %}
+<div class="auth-card animate-pop">
+    <h2>Welcome back</h2>
+    <p class="muted">Choose an option</p>
+
+    <div class="auth-options">
+        <button class="tab-btn active" data-target="#user-login">User</button>
+        <button class="tab-btn" data-target="#admin-login">Admin</button>
+        <button class="tab-btn" data-target="#register">New User</button>
+    </div>
+
+    <div id="user-login" class="tab-pane active">
+        <form method="POST" action="{{ url_for('login') }}" class="form-grid">
+            <input type="hidden" name="role" value="user" />
+            <label>Username
+                <input type="text" name="username" required />
+            </label>
+            <label>Password
+                <input type="password" name="password" required minlength="8" />
+            </label>
+            <button type="submit" class="btn primary full">Login as User</button>
+        </form>
+    </div>
+
+    <div id="admin-login" class="tab-pane">
+        <form method="POST" action="{{ url_for('login') }}" class="form-grid">
+            <input type="hidden" name="role" value="admin" />
+            <label>Admin Username
+                <input type="text" name="username" required />
+            </label>
+            <label>Password
+                <input type="password" name="password" required minlength="8" />
+            </label>
+            <button type="submit" class="btn warning full">Login as Admin</button>
+        </form>
+    </div>
+
+    <div id="register" class="tab-pane">
+        <a class="btn outline full" href="{{ url_for('register') }}">Go to Register</a>
+    </div>
+</div>
+{% endblock %}

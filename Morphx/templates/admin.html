@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}Admin | Amrita Social{% endblock %}
+{% block content %}
+<div class="admin-grid">
+    <div class="card animate-fade">
+        <h3>Users</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>{{ u.id }}</td>
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.email }}</td>
+                    <td>{% if u.is_admin %}Admin{% else %}User{% endif %}</td>
+                    <td>{% if u.blocked %}<span class="badge danger">Blocked</span>{% else %}<span class="badge success">Active</span>{% endif %}</td>
+                    <td>
+                        {% if not u.is_admin %}
+                            <button class="btn danger tiny" onclick="adminBlock({{ u.id }})">Block</button>
+                            <button class="btn success tiny" onclick="adminUnblock({{ u.id }})">Unblock</button>
+                        {% else %}
+                            <span class="muted tiny">No action</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card animate-fade">
+        <h3>Posts Moderation</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th><th>Author</th><th>Preview</th><th>Created</th><th>Status</th><th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in posts %}
+                <tr>
+                    <td>{{ p.id }}</td>
+                    <td>{{ p.author.username }}</td>
+                    <td class="truncate">{{ p.content[:80] if p.content else '' }}</td>
+                    <td>{{ p.created_at.strftime('%b %d %I:%M %p') }}</td>
+                    <td>{% if p.is_deleted %}<span class="badge danger">Removed</span>{% else %}<span class="badge success">Live</span>{% endif %}</td>
+                    <td>
+                        <button class="btn danger tiny" onclick="adminDeletePost({{ p.id }})">Delete</button>
+                        <button class="btn success tiny" onclick="adminRestorePost({{ p.id }})">Restore</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Admin{% endblock %}
+
+{% block content %}
+    <h1>Admin Dashboard</h1>
+    <p>Welcome, {{ session.username }}!</p>
+
+    <div class="admin-section">
+        <h2>Manage Posts</h2>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Upvotes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in posts %}
+                <tr id="post-{{ post.id }}">
+                    <td>{{ post.id }}</td>
+                    <td>{{ post.title }}</td>
+                    <td>{{ post.author_username }}</td>
+                    <td>{{ post.upvotes }}</td>
+                    <td>
+                        <button class="delete-btn" onclick="deletePost('{{ post.id }}')">Delete</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="admin-section">
+        <h2>Manage Users</h2>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr id="user-{{ user.id }}">
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{% if user.is_admin %}Admin{% else %}User{% endif %}</td>
+                    <td>
+                        {% if not user.is_admin %}
+                            <button class="delete-btn" onclick="deleteUser('{{ user.id }}')">Delete</button>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

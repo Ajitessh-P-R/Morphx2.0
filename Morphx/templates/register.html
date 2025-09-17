@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Register | Amrita Social{% endblock %}
+{% block content %}
+<div class="auth-card animate-pop">
+    <h2>Create your account</h2>
+    <form method="POST" action="{{ url_for('register') }}" class="form-grid" onsubmit="return validateRegisterForm(this);">
+        <label>User name
+            <input type="text" name="username" required maxlength="48" />
+        </label>
+        <label>Email
+            <input type="email" name="email" required placeholder="name@gmail.com" />
+        </label>
+        <label>Password
+            <input type="password" name="password" required minlength="8" placeholder="Min 8 chars, 1 uppercase" />
+        </label>
+        <button type="submit" class="btn primary full">Register</button>
+    </form>
+    
+    {% if error %}
+        <div class="flash error">{{ error }}</div>
+    {% endif %}
+</div>
+{% endblock %}
